@@ -1,0 +1,7 @@
+# Xcode
+*.xcuserstate
+*.xccheckout
+*.xcodeproj/project.xcworkspace/
+build/
+derivedData/
+*.log
