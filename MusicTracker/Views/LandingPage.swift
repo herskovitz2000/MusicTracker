@@ -8,7 +8,16 @@ struct LandingPage: View {
     
     @State var isAuthorized : Bool = false
     
+    @State var totalSeconds : TimeInterval = 0
+    @State var hours : Int = 0
+    @State var minutes : Int = 0
+    @State var seconds : Int = 0
     
+    @State var topSongs : [MPMediaItem] = []
+    @State var topAlbums : [MPMediaItemCollection] = []
+    @State var topArtists : [MPMediaItemCollection] = []
+    @State var topPlaylists : [MPMediaPlaylist] = []
+    @State var topGenres : [MPMediaItemCollection] = []
     
     var body: some View {
         VStack {
@@ -20,10 +29,25 @@ struct LandingPage: View {
                     .padding()
             } else {
                 if isAuthorized {
-                    Image(systemName: "music.note")
-                        .imageScale(.large)
-                        .foregroundColor(.accentColor)
-                    Text("Welcome To Music Tracker!")
+                    ScrollView{
+                        Image(systemName: "music.note")
+                            .imageScale(.large)
+                            .foregroundColor(.accentColor)
+                        Text("Welcome To Music Tracker!")
+                        
+                        Text("Total Time Listening to music:")
+                        Text("\(hours) hours, \(minutes) minutes, \(seconds) seconds")
+                        
+                        TopSongs(topSongs: topSongs)
+                        
+                        TopAlbums(topAlbums: topAlbums)
+                        
+                        TopArtists(topArtists: topArtists)
+                        
+                        TopPlaylists(topPlaylists: topPlaylists)
+                        
+                        TopGenres(topGenres: topGenres)
+                    }
                 } else {
                     Image(systemName: "music.note")
                         .imageScale(.large)
@@ -94,18 +118,80 @@ struct LandingPage: View {
         print("getting media")
         
         DispatchQueue.global(qos: .userInitiated).async {
-            let query = MPMediaQuery.songs()
+            let songsQuery = MPMediaQuery.songs()
+            let albumsQuery = MPMediaQuery.albums()
+            let artistsQuery = MPMediaQuery.artists()
+            let playlistsQuery = MPMediaQuery.playlists()
+            let genresQuery = MPMediaQuery.genres()
             
-            if let items = query.items {
-                for song in items {
+            if let songs = songsQuery.items {
+                totalSeconds = songs.reduce(0) { $0 + ($1.playbackDuration * Double($1.playCount)) }
+                hours = Int(totalSeconds / 3600)
+                let remainingSeconds = Int(totalSeconds) % 3600
+                minutes = Int(remainingSeconds / 60)
+                seconds = Int(remainingSeconds % 60)
+                
+                //may want to play around with displaying some info while sorting
+                //topSongs = songs.sorted { ($0.playCount * Int(Double($0.playbackDuration))) > ($1.playCount * Int(Double($1.playbackDuration))) }
+                topSongs = songs.sorted { $0.playCount > $1.playCount }
+                
+                /* test
+                for song in songs {
                     let title = song.title ?? "Unknown Title"
                     let playCount = song.playCount
                     let artist = song.artist ?? "Unknown artist"
                     print("Title: \(title), Artist: \(artist), Play Count: \(playCount), Length: \(song.playbackDuration)")
                 }
+                */
             } else {
                 print("no songs found in the library")
             }
+            
+            
+            if let albums = albumsQuery.collections {
+                //topAlbums = albums.sorted { $0.playCount > $1.playCount }
+                topAlbums = albums.sorted {
+                    let playCount0 = $0.items.reduce(0) { $0 + $1.playCount }
+                        let playCount1 = $1.items.reduce(0) { $0 + $1.playCount }
+                        return playCount0 > playCount1
+                }
+            } else {
+                print("no albums found in the library")
+            }
+            
+            if let artists = artistsQuery.collections {
+                topArtists = artists.sorted {
+                    let playCount0 = $0.items.reduce(0) { $0 + $1.playCount }
+                    let playCount1 = $1.items.reduce(0) { $0 + $1.playCount }
+                    return playCount0 > playCount1
+                }
+            }
+            else{
+                print("no artists found in the library")
+            }
+            
+            if let playlists = playlistsQuery.collections{
+                topPlaylists = playlists.sorted {
+                    let playCount0 = $0.items.reduce(0) { $0 + $1.playCount }
+                    let playCount1 = $1.items.reduce(0) { $0 + $1.playCount }
+                    return playCount0 > playCount1
+                } as? [MPMediaPlaylist] ?? []
+            }
+            else{
+                print("no playlists found in the library")
+            }
+            
+            if let genres = genresQuery.collections {
+                topGenres = genres.sorted {
+                    let playCount0 = $0.items.reduce(0) { $0 + $1.playCount }
+                    let playCount1 = $1.items.reduce(0) { $0 + $1.playCount }
+                    return playCount0 > playCount1
+                }
+            }
+            else{
+                print("no genres found in the library")
+            }
+            
             
             // Update UI on the main thread after the task is completed
             DispatchQueue.main.async {

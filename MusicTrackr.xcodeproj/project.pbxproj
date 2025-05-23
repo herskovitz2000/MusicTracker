@@ -24,18 +24,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0882C8302CF6DDB90003DB5B /* MusicTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0882C8402CF6DDBA0003DB5B /* MusicTrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MusicTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0882C84A2CF6DDBA0003DB5B /* MusicTrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MusicTrackerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0882C8302CF6DDB90003DB5B /* MusicTrackr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicTrackr.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0882C8402CF6DDBA0003DB5B /* MusicTrackrTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MusicTrackrTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0882C84A2CF6DDBA0003DB5B /* MusicTrackrUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MusicTrackrUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		0882C8682CFB90DA0003DB5B /* Exceptions for "MusicTracker" folder in "MusicTracker" target */ = {
+		0882C8682CFB90DA0003DB5B /* Exceptions for "MusicTracker" folder in "MusicTrackr" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 0882C82F2CF6DDB90003DB5B /* MusicTracker */;
+			target = 0882C82F2CF6DDB90003DB5B /* MusicTrackr */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -43,7 +43,7 @@
 		0882C8322CF6DDB90003DB5B /* MusicTracker */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				0882C8682CFB90DA0003DB5B /* Exceptions for "MusicTracker" folder in "MusicTracker" target */,
+				0882C8682CFB90DA0003DB5B /* Exceptions for "MusicTracker" folder in "MusicTrackr" target */,
 			);
 			path = MusicTracker;
 			sourceTree = "<group>";
@@ -98,9 +98,9 @@
 		0882C8312CF6DDB90003DB5B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0882C8302CF6DDB90003DB5B /* MusicTracker.app */,
-				0882C8402CF6DDBA0003DB5B /* MusicTrackerTests.xctest */,
-				0882C84A2CF6DDBA0003DB5B /* MusicTrackerUITests.xctest */,
+				0882C8302CF6DDB90003DB5B /* MusicTrackr.app */,
+				0882C8402CF6DDBA0003DB5B /* MusicTrackrTests.xctest */,
+				0882C84A2CF6DDBA0003DB5B /* MusicTrackrUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -108,9 +108,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0882C82F2CF6DDB90003DB5B /* MusicTracker */ = {
+		0882C82F2CF6DDB90003DB5B /* MusicTrackr */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0882C8542CF6DDBA0003DB5B /* Build configuration list for PBXNativeTarget "MusicTracker" */;
+			buildConfigurationList = 0882C8542CF6DDBA0003DB5B /* Build configuration list for PBXNativeTarget "MusicTrackr" */;
 			buildPhases = (
 				0882C82C2CF6DDB90003DB5B /* Sources */,
 				0882C82D2CF6DDB90003DB5B /* Frameworks */,
@@ -123,16 +123,16 @@
 			fileSystemSynchronizedGroups = (
 				0882C8322CF6DDB90003DB5B /* MusicTracker */,
 			);
-			name = MusicTracker;
+			name = MusicTrackr;
 			packageProductDependencies = (
 			);
 			productName = MusicTracker;
-			productReference = 0882C8302CF6DDB90003DB5B /* MusicTracker.app */;
+			productReference = 0882C8302CF6DDB90003DB5B /* MusicTrackr.app */;
 			productType = "com.apple.product-type.application";
 		};
-		0882C83F2CF6DDBA0003DB5B /* MusicTrackerTests */ = {
+		0882C83F2CF6DDBA0003DB5B /* MusicTrackrTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0882C8572CF6DDBA0003DB5B /* Build configuration list for PBXNativeTarget "MusicTrackerTests" */;
+			buildConfigurationList = 0882C8572CF6DDBA0003DB5B /* Build configuration list for PBXNativeTarget "MusicTrackrTests" */;
 			buildPhases = (
 				0882C83C2CF6DDBA0003DB5B /* Sources */,
 				0882C83D2CF6DDBA0003DB5B /* Frameworks */,
@@ -146,16 +146,16 @@
 			fileSystemSynchronizedGroups = (
 				0882C8432CF6DDBA0003DB5B /* MusicTrackerTests */,
 			);
-			name = MusicTrackerTests;
+			name = MusicTrackrTests;
 			packageProductDependencies = (
 			);
 			productName = MusicTrackerTests;
-			productReference = 0882C8402CF6DDBA0003DB5B /* MusicTrackerTests.xctest */;
+			productReference = 0882C8402CF6DDBA0003DB5B /* MusicTrackrTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		0882C8492CF6DDBA0003DB5B /* MusicTrackerUITests */ = {
+		0882C8492CF6DDBA0003DB5B /* MusicTrackrUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0882C85A2CF6DDBA0003DB5B /* Build configuration list for PBXNativeTarget "MusicTrackerUITests" */;
+			buildConfigurationList = 0882C85A2CF6DDBA0003DB5B /* Build configuration list for PBXNativeTarget "MusicTrackrUITests" */;
 			buildPhases = (
 				0882C8462CF6DDBA0003DB5B /* Sources */,
 				0882C8472CF6DDBA0003DB5B /* Frameworks */,
@@ -169,11 +169,11 @@
 			fileSystemSynchronizedGroups = (
 				0882C84D2CF6DDBA0003DB5B /* MusicTrackerUITests */,
 			);
-			name = MusicTrackerUITests;
+			name = MusicTrackrUITests;
 			packageProductDependencies = (
 			);
 			productName = MusicTrackerUITests;
-			productReference = 0882C84A2CF6DDBA0003DB5B /* MusicTrackerUITests.xctest */;
+			productReference = 0882C84A2CF6DDBA0003DB5B /* MusicTrackrUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -199,7 +199,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 0882C82B2CF6DDB90003DB5B /* Build configuration list for PBXProject "MusicTracker" */;
+			buildConfigurationList = 0882C82B2CF6DDB90003DB5B /* Build configuration list for PBXProject "MusicTrackr" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -213,9 +213,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0882C82F2CF6DDB90003DB5B /* MusicTracker */,
-				0882C83F2CF6DDBA0003DB5B /* MusicTrackerTests */,
-				0882C8492CF6DDBA0003DB5B /* MusicTrackerUITests */,
+				0882C82F2CF6DDB90003DB5B /* MusicTrackr */,
+				0882C83F2CF6DDBA0003DB5B /* MusicTrackrTests */,
+				0882C8492CF6DDBA0003DB5B /* MusicTrackrUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -271,12 +271,12 @@
 /* Begin PBXTargetDependency section */
 		0882C8422CF6DDBA0003DB5B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 0882C82F2CF6DDB90003DB5B /* MusicTracker */;
+			target = 0882C82F2CF6DDB90003DB5B /* MusicTrackr */;
 			targetProxy = 0882C8412CF6DDBA0003DB5B /* PBXContainerItemProxy */;
 		};
 		0882C84C2CF6DDBA0003DB5B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 0882C82F2CF6DDB90003DB5B /* MusicTracker */;
+			target = 0882C82F2CF6DDB90003DB5B /* MusicTrackr */;
 			targetProxy = 0882C84B2CF6DDBA0003DB5B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -413,6 +413,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MusicTracker/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Music Trackr";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "This app displays the users most listened artists and songs";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -423,12 +424,16 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = NathanHerskovitz.MusicTracker;
+				MARKETING_VERSION = 0.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = NathanHerskovitz.MusicTrackr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -444,6 +449,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MusicTracker/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Music Trackr";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "This app displays the users most listened artists and songs";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -454,12 +460,16 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = NathanHerskovitz.MusicTracker;
+				MARKETING_VERSION = 0.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = NathanHerskovitz.MusicTrackr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -478,7 +488,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MusicTracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MusicTracker";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MusicTrackr.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MusicTrackr";
 			};
 			name = Debug;
 		};
@@ -497,7 +507,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MusicTracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MusicTracker";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MusicTrackr.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MusicTrackr";
 			};
 			name = Release;
 		};
@@ -538,7 +548,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0882C82B2CF6DDB90003DB5B /* Build configuration list for PBXProject "MusicTracker" */ = {
+		0882C82B2CF6DDB90003DB5B /* Build configuration list for PBXProject "MusicTrackr" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0882C8522CF6DDBA0003DB5B /* Debug */,
@@ -547,7 +557,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0882C8542CF6DDBA0003DB5B /* Build configuration list for PBXNativeTarget "MusicTracker" */ = {
+		0882C8542CF6DDBA0003DB5B /* Build configuration list for PBXNativeTarget "MusicTrackr" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0882C8552CF6DDBA0003DB5B /* Debug */,
@@ -556,7 +566,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0882C8572CF6DDBA0003DB5B /* Build configuration list for PBXNativeTarget "MusicTrackerTests" */ = {
+		0882C8572CF6DDBA0003DB5B /* Build configuration list for PBXNativeTarget "MusicTrackrTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0882C8582CF6DDBA0003DB5B /* Debug */,
@@ -565,7 +575,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0882C85A2CF6DDBA0003DB5B /* Build configuration list for PBXNativeTarget "MusicTrackerUITests" */ = {
+		0882C85A2CF6DDBA0003DB5B /* Build configuration list for PBXNativeTarget "MusicTrackrUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0882C85B2CF6DDBA0003DB5B /* Debug */,
