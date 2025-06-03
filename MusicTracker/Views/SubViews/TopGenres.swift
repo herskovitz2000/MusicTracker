@@ -13,18 +13,20 @@ struct TopGenres: View {
     
     var body: some View {
         VStack{
-            Text("Top Genres")
-            HStack{
-                Text("1.")
-                GenreListItem(genre: topGenres[0])
-            }
-            HStack{
-                Text("2.")
-                GenreListItem(genre: topGenres[1])
-            }
-            HStack{
-                Text("3.")
-                GenreListItem(genre: topGenres[2])
+            if(!topGenres.isEmpty)
+            {
+                HStack{
+                    Text("1.")
+                    GenreListItem(genre: topGenres[0])
+                }
+                HStack{
+                    Text("2.")
+                    GenreListItem(genre: topGenres[1])
+                }
+                HStack{
+                    Text("3.")
+                    GenreListItem(genre: topGenres[2])
+                }
             }
         }
     }

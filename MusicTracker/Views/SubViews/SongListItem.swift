@@ -12,14 +12,20 @@ struct SongListItem: View {
     @State var song : MPMediaItem
     
     var body: some View {
-        HStack{
-            VStack{
-                Text(song.title ?? "Unknown Title" )
-                    .font(.system(size: 12))
-                Text(song.artist ?? "Unknown Artist")
-                    .font(.system(size: 8))
-                    .foregroundColor(.secondary)
+        VStack{
+            HStack{
+                    Text(song.title ?? "Unknown Title" )
+                        .font(.system(size: 12))
+                    Text("-")
+                        .font(.system(size: 8))
+                        .foregroundColor(.secondary)
+                    Text((song.artist ?? "Unknown Artist"))
+                        .font(.system(size: 8))
+                        .foregroundColor(.secondary)
             }
+            Text("\(song.playCount) total plays")
+                .font(.system(size: 8))
+                .foregroundColor(.secondary)
         }
     }
 }

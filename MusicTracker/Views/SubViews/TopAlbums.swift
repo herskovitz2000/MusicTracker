@@ -13,18 +13,20 @@ struct TopAlbums: View {
     
     var body: some View {
         VStack{
-            Text("Top Albums")
-            HStack{
-                Text("1.")
-                AlbumListItem(album: topAlbums[0])
-            }
-            HStack{
-                Text("2.")
-                AlbumListItem(album: topAlbums[1])
-            }
-            HStack{
-                Text("3.")
-                AlbumListItem(album: topAlbums[2])
+            if(!topAlbums.isEmpty)
+            {
+                HStack{
+                    Text("1.")
+                    AlbumListItem(album: topAlbums[0])
+                }
+                HStack{
+                    Text("2.")
+                    AlbumListItem(album: topAlbums[1])
+                }
+                HStack{
+                    Text("3.")
+                    AlbumListItem(album: topAlbums[2])
+                }
             }
         }
     }

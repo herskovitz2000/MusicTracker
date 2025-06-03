@@ -13,18 +13,20 @@ struct TopSongs: View {
     
     var body: some View {
         VStack{
-            Text("Top Songs")
-            HStack{
-                Text("1.")
-                SongListItem(song: topSongs[0])
-            }
-            HStack{
-                Text("2.")
-                SongListItem(song: topSongs[1])
-            }
-            HStack{
-                Text("3.")
-                SongListItem(song: topSongs[2])
+            if(!topSongs.isEmpty)
+            {
+                HStack{
+                    Text("1.")
+                    SongListItem(song: topSongs[0])
+                }
+                HStack{
+                    Text("2.")
+                    SongListItem(song: topSongs[1])
+                }
+                HStack{
+                    Text("3.")
+                    SongListItem(song: topSongs[2])
+                }
             }
         }
     }
