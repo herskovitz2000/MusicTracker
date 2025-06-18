@@ -25,6 +25,12 @@ struct LandingPage: View {
     @State var topPlaylists : [MPMediaPlaylist] = []
     @State var topGenres : [MPMediaItemCollection] = []
     
+    @State var showAllSongs : Bool = false
+    @State var showAllAlbums : Bool = false
+    @State var showAllArtists : Bool = false
+    @State var showAllPlaylists : Bool = false
+    @State var showAllGenres : Bool = false
+    
     var isLibraryEmpty: Bool {
         topSongs.isEmpty &&
         topAlbums.isEmpty &&
@@ -71,38 +77,53 @@ struct LandingPage: View {
                             Text("\(hours) hours, \(minutes) minutes, \(seconds) seconds")
                                 .padding(.bottom)
                             
-                            Text("Top Songs")
                             if isSongsLoading {
+                                Text("Top Songs")
                                 ProgressView("Loading Songs...")
                             } else {
+                                HStack{
+                                    Text("Top Songs")
+                                }
                                 TopSongs(topSongs: topSongs)
                             }
 
-                            Text("Top Albums")
                             if isAlbumsLoading {
+                                Text("Top Albums")
                                 ProgressView("Loading Albums...")
                             } else {
+                                HStack{
+                                    Text("Top Albums")
+                                }
                                 TopAlbums(topAlbums: topAlbums)
                             }
 
-                            Text("Top Artists")
                             if isArtistsLoading {
+                                Text("Top Artists")
                                 ProgressView("Loading Artists...")
                             } else {
+                                HStack{
+                                    Text("Top Artists")
+                                }
                                 TopArtists(topArtists: topArtists)
                             }
 
-                            Text("Top Playlists")
                             if isPlaylistsLoading {
+                                Text("Top Playlists")
                                 ProgressView("Loading Playlists...")
                             } else {
+                                HStack{
+                                    Text("Top Playlists")
+                                }
                                 TopPlaylists(topPlaylists: topPlaylists)
                             }
 
-                            Text("Top Genres")
                             if isGenresLoading {
+                                Text("Top Genres")
                                 ProgressView("Loading Genres...")
                             } else {
+                                HStack{
+                                    Text("Top Genres")
+                                }
                                 TopGenres(topGenres: topGenres)
                             }
                         }
