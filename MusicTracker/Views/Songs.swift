@@ -9,11 +9,29 @@ import SwiftUI
 import MediaPlayer
 
 struct Songs: View {
-    @State var topGenres: [MPMediaItemCollection]
+    @State var topSongs: [MPMediaItem]
+    @Binding var showAllSongs: Bool
     
     var body: some View {
         VStack{
-            Text("Songs")
+            ZStack{
+                Text("Songs")
+                HStack{
+                    Button("Back") {
+                        showAllSongs = false
+                    }
+                    Spacer()
+                }
+            }
+            List {
+                ForEach(Array(topSongs.enumerated()), id: \.offset) { index, song in
+                    HStack{
+                        Text("\(index + 1)")
+                        SongListItem(song: song)
+                    }
+                }
+            }
         }
+        .background(Color(.systemBackground))
     }
 }

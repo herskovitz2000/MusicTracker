@@ -20,6 +20,8 @@ struct MainView: View
         ZStack{
             switch appState.CurrentView{
             case .LandingPage:
+                //LandingPage()
+                
                 TabView {
                     LandingPage()
                         .tabItem {
@@ -32,6 +34,7 @@ struct MainView: View
                         }
                 }
                 .accentColor(.blue) // Customize the color of the selected tab item
+                 
             }
             
         }

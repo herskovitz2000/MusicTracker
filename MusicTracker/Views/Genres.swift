@@ -10,10 +10,28 @@ import MediaPlayer
 
 struct Genres: View {
     @State var topGenres: [MPMediaItemCollection]
+    @Binding var showAllGenres: Bool
     
     var body: some View {
         VStack{
-            Text("Genres")
+            ZStack{
+                Text("Genres")
+                HStack{
+                    Button("Back") {
+                        showAllGenres = false
+                    }
+                    Spacer()
+                }
+            }
+            List {
+                ForEach(Array(topGenres.enumerated()), id: \.offset) { index, genre in
+                    HStack{
+                        Text("\(index + 1)")
+                        GenreListItem(genre: genre)
+                    }
+                }
+            }
         }
+        .background(Color(.systemBackground))
     }
 }

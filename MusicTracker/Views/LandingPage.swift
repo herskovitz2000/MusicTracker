@@ -40,106 +40,159 @@ struct LandingPage: View {
     }
     
     var body: some View {
-        VStack {
-            if isAuthorized {
-                ScrollView
-                {
-                    if isLibraryEmpty {
-                        if(isLoading)
-                        {
-                            ProgressView()
-                            Text(loadingMessage)
-                        }
-                        else
-                        {
-                            VStack(spacing: 12) {
-                                Text("No music found in your library.")
-                                    .font(.headline)
-                                Button(action: {
-                                    getMedia()
-                                }) {
-                                    Text("Refresh")
-                                        .padding()
-                                        .background(Color.blue.opacity(0.2))
-                                        .cornerRadius(10)
-                                }
+        ZStack{
+            VStack {
+                if isAuthorized {
+                    ScrollView
+                    {
+                        if isLibraryEmpty {
+                            if(isLoading)
+                            {
+                                ProgressView()
+                                Text(loadingMessage)
                             }
-                            .padding(.top, 40)
-                        }
-                    } else {
-                        Group {
-                            Image(systemName: "music.note")
-                                .imageScale(.large)
-                                .foregroundColor(.accentColor)
-                            Text("Welcome To Music Tracker!")
+                            else
+                            {
+                                VStack(spacing: 12) {
+                                    Text("No music found in your library.")
+                                        .font(.headline)
+                                    Button(action: {
+                                        getMedia()
+                                    }) {
+                                        Text("Refresh")
+                                            .padding()
+                                            .background(Color.blue.opacity(0.2))
+                                            .cornerRadius(10)
+                                    }
+                                }
+                                .padding(.top, 40)
+                            }
+                        } else {
+                            Group {
+                                Image(systemName: "music.note")
+                                    .imageScale(.large)
+                                    .foregroundColor(.accentColor)
+                                Text("Welcome To Music Tracker!")
 
-                            Text("Total Time Listening to Music:")
-                            Text("\(hours) hours, \(minutes) minutes, \(seconds) seconds")
-                                .padding(.bottom)
-                            
-                            if isSongsLoading {
-                                Text("Top Songs")
-                                ProgressView("Loading Songs...")
-                            } else {
-                                HStack{
+                                Text("Total Time Listening to Music:")
+                                Text("\(hours) hours, \(minutes) minutes, \(seconds) seconds")
+                                    .padding(.bottom)
+                                
+                                if isSongsLoading {
                                     Text("Top Songs")
+                                    ProgressView("Loading Songs...")
+                                } else {
+                                    ZStack{
+                                        Text("Top Songs")
+                                        HStack{
+                                            Spacer()
+                                            Button("See All") {
+                                                showAllSongs = true
+                                            }
+                                        }
+                                    }
+                                    TopSongs(topSongs: topSongs)
                                 }
-                                TopSongs(topSongs: topSongs)
-                            }
 
-                            if isAlbumsLoading {
-                                Text("Top Albums")
-                                ProgressView("Loading Albums...")
-                            } else {
-                                HStack{
+                                if isAlbumsLoading {
                                     Text("Top Albums")
+                                    ProgressView("Loading Albums...")
+                                } else {
+                                    ZStack{
+                                        Text("Top Albums")
+                                        HStack{
+                                            Spacer()
+                                            Button("See All") {
+                                                showAllAlbums = true
+                                            }
+                                        }
+                                    }
+                                    TopAlbums(topAlbums: topAlbums)
                                 }
-                                TopAlbums(topAlbums: topAlbums)
-                            }
 
-                            if isArtistsLoading {
-                                Text("Top Artists")
-                                ProgressView("Loading Artists...")
-                            } else {
-                                HStack{
+                                if isArtistsLoading {
                                     Text("Top Artists")
+                                    ProgressView("Loading Artists...")
+                                } else {
+                                    ZStack{
+                                        Text("Top Artists")
+                                        HStack{
+                                            Spacer()
+                                            Button("See All") {
+                                                showAllArtists = true
+                                            }
+                                        }
+                                    }
+                                    TopArtists(topArtists: topArtists)
                                 }
-                                TopArtists(topArtists: topArtists)
-                            }
 
-                            if isPlaylistsLoading {
-                                Text("Top Playlists")
-                                ProgressView("Loading Playlists...")
-                            } else {
-                                HStack{
+                                if isPlaylistsLoading {
                                     Text("Top Playlists")
+                                    ProgressView("Loading Playlists...")
+                                } else {
+                                    ZStack{
+                                        Text("Top Playlists")
+                                        HStack{
+                                            Spacer()
+                                            Button("See All") {
+                                                showAllPlaylists = true
+                                            }
+                                        }
+                                    }
+                                    TopPlaylists(topPlaylists: topPlaylists)
                                 }
-                                TopPlaylists(topPlaylists: topPlaylists)
-                            }
 
-                            if isGenresLoading {
-                                Text("Top Genres")
-                                ProgressView("Loading Genres...")
-                            } else {
-                                HStack{
+                                if isGenresLoading {
                                     Text("Top Genres")
+                                    ProgressView("Loading Genres...")
+                                } else {
+                                    ZStack{
+                                        Text("Top Genres")
+                                        HStack{
+                                            Spacer()
+                                            Button("See All") {
+                                                showAllGenres = true
+                                            }
+                                        }
+                                    }
+                                    TopGenres(topGenres: topGenres)
                                 }
-                                TopGenres(topGenres: topGenres)
                             }
                         }
                     }
-                }
-                .refreshable {
-                    getMedia()
-                }
-            } else {
-                Text("Please authorize access to your music library.")
-                Button("Open Settings") {
-                    if let settingsUrl = URL(string: UIApplication.openSettingsURLString),
-                       UIApplication.shared.canOpenURL(settingsUrl) {
-                        UIApplication.shared.open(settingsUrl)
+                    .refreshable {
+                        getMedia()
+                    }
+                } else {
+                    Text("Please authorize access to your music library.")
+                    Button("Open Settings") {
+                        if let settingsUrl = URL(string: UIApplication.openSettingsURLString),
+                           UIApplication.shared.canOpenURL(settingsUrl) {
+                            UIApplication.shared.open(settingsUrl)
+                        }
                     }
                 }
+            }
+            
+            if(showAllSongs)
+            {
+                Songs(topSongs: topSongs, showAllSongs: $showAllSongs)
+            }
+            else if(showAllAlbums)
+            {
+                Albums(topAlbums: topAlbums, showAllAlbums: $showAllAlbums)
+            }
+            else if (showAllArtists)
+            {
+                Artists(topArtists: topArtists, showAllArtists: $showAllArtists)
+            }
+            else if (showAllPlaylists)
+            {
+                Playlists(topPlaylists: topPlaylists, showAllPlaylists: $showAllPlaylists)
+            }
+            else if (showAllGenres)
+            {
+                Genres(topGenres: topGenres, showAllGenres: $showAllGenres)
             }
         }
         .padding()
