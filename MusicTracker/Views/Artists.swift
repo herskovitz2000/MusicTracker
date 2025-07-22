@@ -12,24 +12,42 @@ struct Artists: View {
     @State var topArtists: [MPMediaItemCollection]
     @Binding var showAllArtists: Bool
     
+    @State var selectedArtist : MPMediaItemCollection = MPMediaItemCollection(items: [])
+    @State var showArtist : Bool = false
+    
     var body: some View {
-        VStack{
-            ZStack{
-                Text("Artists")
-                HStack{
-                    Button("Back") {
-                        showAllArtists = false
+        ZStack
+        {
+            VStack{
+                ZStack{
+                    Text("Artists")
+                    HStack{
+                        Button("Back") {
+                            showAllArtists = false
+                        }
+                        Spacer()
                     }
-                    Spacer()
+                }
+                List {
+                    ForEach(Array(topArtists.enumerated()), id: \.offset) { index, artist in
+                        Button(
+                            action: {
+                                selectedArtist = artist
+                                showArtist = true
+                            },
+                            label: {
+                                HStack{
+                                    Text("\(index + 1)")
+                                    ArtistListItem(artist: artist)
+                                }
+                            }
+                        )
+                    }
                 }
             }
-            List {
-                ForEach(Array(topArtists.enumerated()), id: \.offset) { index, artist in
-                    HStack{
-                        Text("\(index + 1)")
-                        ArtistListItem(artist: artist)
-                    }
-                }
+            if(showArtist)
+            {
+                Artist(Artist: selectedArtist, showArtist: $showArtist)
             }
         }
         .background(Color(.systemBackground))

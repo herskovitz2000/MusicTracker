@@ -12,24 +12,41 @@ struct Genres: View {
     @State var topGenres: [MPMediaItemCollection]
     @Binding var showAllGenres: Bool
     
+    @State var selectedGenre : MPMediaItemCollection = MPMediaItemCollection(items: [])
+    @State var showGenre : Bool = false
+    
     var body: some View {
-        VStack{
-            ZStack{
-                Text("Genres")
-                HStack{
-                    Button("Back") {
-                        showAllGenres = false
+        ZStack{
+            VStack{
+                ZStack{
+                    Text("Genres")
+                    HStack{
+                        Button("Back") {
+                            showAllGenres = false
+                        }
+                        Spacer()
                     }
-                    Spacer()
+                }
+                List {
+                    ForEach(Array(topGenres.enumerated()), id: \.offset) { index, genre in
+                        Button(
+                            action: {
+                                selectedGenre = genre
+                                showGenre = true
+                            },
+                            label: {
+                                HStack{
+                                    Text("\(index + 1)")
+                                    GenreListItem(genre: genre)
+                                }
+                            }
+                        )
+                    }
                 }
             }
-            List {
-                ForEach(Array(topGenres.enumerated()), id: \.offset) { index, genre in
-                    HStack{
-                        Text("\(index + 1)")
-                        GenreListItem(genre: genre)
-                    }
-                }
+            if(showGenre)
+            {
+                Genre(Genre: selectedGenre, showGenre: $showGenre)
             }
         }
         .background(Color(.systemBackground))

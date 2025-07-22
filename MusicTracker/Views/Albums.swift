@@ -12,24 +12,41 @@ struct Albums: View {
     @State var topAlbums: [MPMediaItemCollection]
     @Binding var showAllAlbums : Bool
     
+    @State var selectedAlbum : MPMediaItemCollection = MPMediaItemCollection(items: [])
+    @State var showAlbum : Bool = false
+    
     var body: some View {
-        VStack{
-            ZStack{
-                Text("Albums")
-                HStack{
-                    Button("Back") {
-                        showAllAlbums = false
+        ZStack{
+            VStack{
+                ZStack{
+                    Text("Albums")
+                    HStack{
+                        Button("Back") {
+                            showAllAlbums = false
+                        }
+                        Spacer()
                     }
-                    Spacer()
+                }
+                List {
+                    ForEach(Array(topAlbums.enumerated()), id: \.offset) { index, album in
+                        Button(
+                            action: {
+                                selectedAlbum = album
+                                showAlbum = true
+                            },
+                            label: {
+                                HStack{
+                                    Text("\(index + 1)")
+                                    AlbumListItem(album: album)
+                                }
+                            }
+                        )
+                    }
                 }
             }
-            List {
-                ForEach(Array(topAlbums.enumerated()), id: \.offset) { index, album in
-                    HStack{
-                        Text("\(index + 1)")
-                        AlbumListItem(album: album)
-                    }
-                }
+            if(showAlbum)
+            {
+                Album(Album: selectedAlbum, showAlbum: $showAlbum)
             }
         }
         .background(Color(.systemBackground))
