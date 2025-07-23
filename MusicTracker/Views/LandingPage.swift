@@ -214,7 +214,10 @@ struct LandingPage: View {
         case .authorized:
             // User already authorized, proceed to get media
             isAuthorized = true
-            getMedia()
+            if !loadCachedData() {
+                // If no valid cache exists, fetch fresh data
+                getMedia()
+            }
         case .notDetermined:
             // User has not yet decided, request authorization
             requestAuthorization()
@@ -253,6 +256,8 @@ struct LandingPage: View {
         func checkIfAllDone() {
             if !isSongsLoading && !isAlbumsLoading && !isArtistsLoading && !isPlaylistsLoading && !isGenresLoading {
                 isLoading = false
+                
+                self.cacheData()
             }
         }
 
@@ -356,6 +361,54 @@ struct LandingPage: View {
                 }
             }
         }
+    }
+    
+    func loadCachedData() -> Bool {
+        guard let cache = MusicCacheManager.loadCache() else {
+            return false
+        }
+        
+        // Convert cached data back to media objects
+        let convertedData = MusicCacheManager.convertCacheToMediaObjects(cache: cache)
+        
+        // Update UI on main thread
+        DispatchQueue.main.async {
+            self.topSongs = convertedData.songs
+            self.topAlbums = convertedData.albums
+            self.topArtists = convertedData.artists
+            self.topPlaylists = convertedData.playlists
+            self.topGenres = convertedData.genres
+            self.totalSeconds = cache.totalSeconds
+            
+            let h = Int(cache.totalSeconds / 3600)
+            let m = Int(Int(cache.totalSeconds) % 3600 / 60)
+            let s = Int(cache.totalSeconds) % 60
+            
+            self.hours = h
+            self.minutes = m
+            self.seconds = s
+            
+            // Set loading states to false
+            self.isSongsLoading = false
+            self.isAlbumsLoading = false
+            self.isArtistsLoading = false
+            self.isPlaylistsLoading = false
+            self.isGenresLoading = false
+            self.isLoading = false
+        }
+        
+        return true
+    }
+
+    func cacheData() {
+        MusicCacheManager.saveCache(
+            songs: topSongs,
+            albums: topAlbums,
+            artists: topArtists,
+            playlists: topPlaylists,
+            genres: topGenres,
+            totalSeconds: totalSeconds
+        )
     }
 }
 
