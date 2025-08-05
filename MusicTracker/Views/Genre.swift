@@ -45,7 +45,7 @@ struct Genre: View {
                     )
             }
             Text("\(totalPlayCount) total plays")
-                .font(.system(size: 8))
+                .font(.caption)
                 .foregroundColor(.secondary)
             Spacer()
         }

@@ -31,12 +31,12 @@ struct ArtistListItem: View {
             
             VStack (alignment: .leading){
                 Text(artist.representativeItem?.artist ?? "Unknown Artist" )
-                    .font(.system(size: 12))
+                    .font(.subheadline)
                 //Text(artist.representativeItem?.artist ?? "Unknown Artist")
                 //    .font(.system(size: 8))
                 //    .foregroundColor(.secondary)
                 Text("\(totalPlayCount) total plays")
-                    .font(.system(size: 8))
+                    .font(.caption)
                     .foregroundColor(.secondary)
             }
             Spacer()

@@ -31,16 +31,16 @@ struct AlbumListItem: View {
             VStack (alignment: .leading){
                 HStack{
                     Text(album.representativeItem?.albumTitle ?? "Unknown Title" )
-                        .font(.system(size: 12))
+                        .font(.subheadline)
                     Text("-")
-                        .font(.system(size: 8))
+                        .font(.caption)
                         .foregroundColor(.secondary)
                     Text(album.representativeItem?.albumArtist ?? "Unknown Artist")
-                        .font(.system(size: 8))
+                        .font(.caption)
                         .foregroundColor(.secondary)
                 }
                 Text("\(totalPlayCount) total plays")
-                    .font(.system(size: 8))
+                    .font(.caption)
                     .foregroundColor(.secondary)
             }
             Spacer()

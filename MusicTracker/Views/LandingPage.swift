@@ -39,6 +39,24 @@ struct LandingPage: View {
         topGenres.isEmpty
     }
     
+    // Helper function to get unique items and calculate total play count
+    private func getTotalPlayCount(from collection: MPMediaItemCollection) -> Int {
+        let uniqueItems = Dictionary(grouping: collection.items) { $0.persistentID }
+            .compactMapValues { $0.first }
+            .values
+        
+        return uniqueItems.reduce(0) { $0 + $1.playCount }
+    }
+    
+    // Helper function to get unique songs from an array
+    private func getUniqueSongs(from songs: [MPMediaItem]) -> [MPMediaItem] {
+        let uniqueSongs = Dictionary(grouping: songs) { $0.persistentID }
+            .compactMapValues { $0.first }
+            .values
+        
+        return Array(uniqueSongs)
+    }
+    
     var body: some View {
         ZStack{
             VStack {
@@ -73,7 +91,8 @@ struct LandingPage: View {
                                     .imageScale(.large)
                                     .foregroundColor(.accentColor)
                                 Text("Welcome To Music Tracker!")
-
+                                    .font(.headline)
+                                    
                                 Text("Total Time Listening to Music:")
                                 Text("\(hours) hours, \(minutes) minutes, \(seconds) seconds")
                                     .padding(.bottom)
@@ -268,14 +287,16 @@ struct LandingPage: View {
             let playlistsQuery = MPMediaQuery.playlists()
             let genresQuery = MPMediaQuery.genres()
 
-            // Songs
+            // Songs - Remove duplicates before processing
             if let songs = songsQuery.items {
-                let totalSecondsLocal = songs.reduce(0) { $0 + ($1.playbackDuration * Double($1.playCount)) }
+                let uniqueSongs = self.getUniqueSongs(from: songs)
+                
+                let totalSecondsLocal = uniqueSongs.reduce(0) { $0 + ($1.playbackDuration * Double($1.playCount)) }
                 let h = Int(totalSecondsLocal / 3600)
                 let m = Int(Int(totalSecondsLocal) % 3600 / 60)
                 let s = Int(totalSecondsLocal) % 60
 
-                let sortedSongs = songs.sorted { $0.playCount > $1.playCount }
+                let sortedSongs = uniqueSongs.sorted { $0.playCount > $1.playCount }
 
                 DispatchQueue.main.async {
                     self.totalSeconds = totalSecondsLocal
@@ -293,10 +314,10 @@ struct LandingPage: View {
                 }
             }
 
-            // Albums
+            // Albums - Use helper function for deduplication
             if let albums = albumsQuery.collections {
                 let sortedAlbums = albums.sorted {
-                    $0.items.reduce(0) { $0 + $1.playCount } > $1.items.reduce(0) { $0 + $1.playCount }
+                    self.getTotalPlayCount(from: $0) > self.getTotalPlayCount(from: $1)
                 }
                 DispatchQueue.main.async {
                     self.topAlbums = sortedAlbums
@@ -310,10 +331,10 @@ struct LandingPage: View {
                 }
             }
 
-            // Artists
+            // Artists - Use helper function for deduplication
             if let artists = artistsQuery.collections {
                 let sortedArtists = artists.sorted {
-                    $0.items.reduce(0) { $0 + $1.playCount } > $1.items.reduce(0) { $0 + $1.playCount }
+                    self.getTotalPlayCount(from: $0) > self.getTotalPlayCount(from: $1)
                 }
                 DispatchQueue.main.async {
                     self.topArtists = sortedArtists
@@ -327,10 +348,10 @@ struct LandingPage: View {
                 }
             }
 
-            // Playlists
+            // Playlists - Use helper function for deduplication
             if let playlists = playlistsQuery.collections as? [MPMediaPlaylist] {
                 let sortedPlaylists = playlists.sorted {
-                    $0.items.reduce(0) { $0 + $1.playCount } > $1.items.reduce(0) { $0 + $1.playCount }
+                    self.getTotalPlayCount(from: $0) > self.getTotalPlayCount(from: $1)
                 }
                 DispatchQueue.main.async {
                     self.topPlaylists = sortedPlaylists
@@ -344,10 +365,10 @@ struct LandingPage: View {
                 }
             }
 
-            // Genres
+            // Genres - Use helper function for deduplication
             if let genres = genresQuery.collections {
                 let sortedGenres = genres.sorted {
-                    $0.items.reduce(0) { $0 + $1.playCount } > $1.items.reduce(0) { $0 + $1.playCount }
+                    self.getTotalPlayCount(from: $0) > self.getTotalPlayCount(from: $1)
                 }
                 DispatchQueue.main.async {
                     self.topGenres = sortedGenres

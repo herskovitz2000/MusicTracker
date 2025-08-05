@@ -41,7 +41,7 @@ struct Song: View {
                     )
             }
             Text("\(Song.playCount) total plays")
-                .font(.system(size: 8))
+                .font(.caption)
                 .foregroundColor(.secondary)
             Spacer()
         }

@@ -31,12 +31,12 @@ struct PlaylistListItem: View {
             
             VStack (alignment: .leading){
                 Text(playlist.name ?? "Unknown Playlist Name" )
-                    .font(.system(size: 12))
+                    .font(.subheadline)
                 //Text(playlist.representativeItem?.artist ?? "Unknown Artist")
                 //    .font(.system(size: 8))
                 //    .foregroundColor(.secondary)
                 Text("\(totalPlayCount) total plays")
-                    .font(.system(size: 8))
+                    .font(.caption)
                     .foregroundColor(.secondary)
             }
             Spacer()

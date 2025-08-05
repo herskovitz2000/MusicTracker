@@ -33,16 +33,16 @@ struct SongListItem: View {
             VStack (alignment: .leading){
                 HStack{
                         Text(song.title ?? "Unknown Title" )
-                            .font(.system(size: 12))
+                            .font(.subheadline)
                         Text("-")
-                            .font(.system(size: 8))
+                            .font(.caption)
                             .foregroundColor(.secondary)
                         Text((song.artist ?? "Unknown Artist"))
-                            .font(.system(size: 8))
+                            .font(.caption)
                             .foregroundColor(.secondary)
                 }
                 Text("\(song.playCount) total plays")
-                    .font(.system(size: 8))
+                    .font(.caption)
                     .foregroundColor(.secondary)
             }
             Spacer()

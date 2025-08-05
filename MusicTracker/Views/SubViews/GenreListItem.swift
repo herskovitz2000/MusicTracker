@@ -31,12 +31,12 @@ struct GenreListItem: View {
             
             VStack (alignment: .leading){
                 Text(genre.representativeItem?.genre ?? "Unknown Genre" )
-                    .font(.system(size: 12))
+                    .font(.subheadline)
                 //Text(genre.representativeItem?.artist ?? "Unknown Artist")
                 //    .font(.system(size: 8))
                 //    .foregroundColor(.secondary)
                 Text("\(totalPlayCount) total plays")
-                    .font(.system(size: 8))
+                    .font(.caption)
                     .foregroundColor(.secondary)
             }
             Spacer()
