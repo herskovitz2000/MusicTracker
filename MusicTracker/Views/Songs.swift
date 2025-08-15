@@ -52,6 +52,6 @@ struct Songs: View {
             }
         }
         .background(Color(.systemBackground))
-        .ignoresSafeArea()
+        //.ignoresSafeArea()
     }
 }

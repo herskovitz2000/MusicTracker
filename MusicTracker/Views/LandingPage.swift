@@ -39,150 +39,115 @@ struct LandingPage: View {
         topGenres.isEmpty
     }
     
-    // Helper function to get unique items and calculate total play count
     private func getTotalPlayCount(from collection: MPMediaItemCollection) -> Int {
         let uniqueItems = Dictionary(grouping: collection.items) { $0.persistentID }
             .compactMapValues { $0.first }
             .values
-        
         return uniqueItems.reduce(0) { $0 + $1.playCount }
     }
     
-    // Helper function to get unique songs from an array
     private func getUniqueSongs(from songs: [MPMediaItem]) -> [MPMediaItem] {
         let uniqueSongs = Dictionary(grouping: songs) { $0.persistentID }
             .compactMapValues { $0.first }
             .values
-        
         return Array(uniqueSongs)
     }
     
     var body: some View {
-        ZStack{
-            VStack {
-                if isAuthorized {
-                    ScrollView
-                    {
-                        if isLibraryEmpty {
-                            if(isLoading)
-                            {
-                                ProgressView()
-                                Text(loadingMessage)
-                            }
-                            else
-                            {
-                                VStack(spacing: 12) {
-                                    Text("No music found in your library.")
-                                        .font(.headline)
-                                    Button(action: {
-                                        getMedia()
-                                    }) {
-                                        Text("Refresh")
-                                            .padding()
-                                            .background(Color.blue.opacity(0.2))
-                                            .cornerRadius(10)
-                                    }
-                                }
-                                .padding(.top, 40)
-                            }
+        ZStack {
+            if isAuthorized {
+                if isLibraryEmpty {
+                    VStack(spacing: 12) {
+                        if isLoading {
+                            ProgressView()
+                            Text(loadingMessage)
                         } else {
-                            Group {
+                            Text("No music found in your library.")
+                                .font(.headline)
+                            Button("Refresh") {
+                                getMedia()
+                            }
+                            .padding()
+                            .background(Color.blue.opacity(0.2))
+                            .cornerRadius(10)
+                        }
+                    }
+                    .padding(.top, 40)
+                } else {
+                    List {
+                        // Header
+                        Section {
+                            VStack(spacing: 10) {
                                 Image(systemName: "music.note")
                                     .imageScale(.large)
                                     .foregroundColor(.accentColor)
                                 Text("Welcome To Music Tracker!")
                                     .font(.headline)
-                                    
                                 Text("Total Time Listening to Music:")
                                 Text("\(hours) hours, \(minutes) minutes, \(seconds) seconds")
-                                    .padding(.bottom)
-                                
-                                if isSongsLoading {
-                                    Text("Top Songs")
-                                    ProgressView("Loading Songs...")
-                                } else {
-                                    ZStack{
-                                        Text("Top Songs")
-                                        HStack{
-                                            Spacer()
-                                            Button("See All") {
-                                                showAllSongs = true
-                                            }
-                                        }
-                                    }
-                                    TopSongs(topSongs: topSongs)
-                                }
-
-                                if isAlbumsLoading {
-                                    Text("Top Albums")
-                                    ProgressView("Loading Albums...")
-                                } else {
-                                    ZStack{
-                                        Text("Top Albums")
-                                        HStack{
-                                            Spacer()
-                                            Button("See All") {
-                                                showAllAlbums = true
-                                            }
-                                        }
-                                    }
-                                    TopAlbums(topAlbums: topAlbums)
-                                }
-
-                                if isArtistsLoading {
-                                    Text("Top Artists")
-                                    ProgressView("Loading Artists...")
-                                } else {
-                                    ZStack{
-                                        Text("Top Artists")
-                                        HStack{
-                                            Spacer()
-                                            Button("See All") {
-                                                showAllArtists = true
-                                            }
-                                        }
-                                    }
-                                    TopArtists(topArtists: topArtists)
-                                }
-
-                                if isPlaylistsLoading {
-                                    Text("Top Playlists")
-                                    ProgressView("Loading Playlists...")
-                                } else {
-                                    ZStack{
-                                        Text("Top Playlists")
-                                        HStack{
-                                            Spacer()
-                                            Button("See All") {
-                                                showAllPlaylists = true
-                                            }
-                                        }
-                                    }
-                                    TopPlaylists(topPlaylists: topPlaylists)
-                                }
-
-                                if isGenresLoading {
-                                    Text("Top Genres")
-                                    ProgressView("Loading Genres...")
-                                } else {
-                                    ZStack{
-                                        Text("Top Genres")
-                                        HStack{
-                                            Spacer()
-                                            Button("See All") {
-                                                showAllGenres = true
-                                            }
-                                        }
-                                    }
-                                    TopGenres(topGenres: topGenres)
-                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
+                        
+                        // Top Songs
+                        Section {
+                            sectionHeader(title: "Top Songs", action: { showAllSongs = true })
+                            if isSongsLoading {
+                                ProgressView("Loading Songs...")
+                            } else {
+                                TopSongs(topSongs: Array(topSongs.prefix(3)))
+                            }
+                        }
+                        
+                        // Top Albums
+                        Section {
+                            sectionHeader(title: "Top Albums", action: { showAllAlbums = true })
+                            if isAlbumsLoading {
+                                ProgressView("Loading Albums...")
+                            } else {
+                                TopAlbums(topAlbums: Array(topAlbums.prefix(3)))
+                            }
+                        }
+                        
+                        // Top Artists
+                        Section {
+                            sectionHeader(title: "Top Artists", action: { showAllArtists = true })
+                            if isArtistsLoading {
+                                ProgressView("Loading Artists...")
+                            } else {
+                                TopArtists(topArtists: Array(topArtists.prefix(3)))
+                            }
+                        }
+                        
+                        // Top Playlists
+                        Section {
+                            sectionHeader(title: "Top Playlists", action: { showAllPlaylists = true })
+                            if isPlaylistsLoading {
+                                ProgressView("Loading Playlists...")
+                            } else {
+                                TopPlaylists(topPlaylists: Array(topPlaylists.prefix(3)))
+                            }
+                        }
+                        
+                        // Top Genres
+                        Section {
+                            sectionHeader(title: "Top Genres", action: { showAllGenres = true })
+                            if isGenresLoading {
+                                ProgressView("Loading Genres...")
+                            } else {
+                                TopGenres(topGenres: Array(topGenres.prefix(3)))
                             }
                         }
                     }
+                    .listStyle(.insetGrouped)
+                    //.listStyle(.plain)
+                    //.listRowInsets(EdgeInsets())
                     .refreshable {
                         getMedia()
                     }
-                } else {
+                }
+            } else {
+                VStack {
                     Text("Please authorize access to your music library.")
                     Button("Open Settings") {
                         if let settingsUrl = URL(string: UIApplication.openSettingsURLString),
@@ -193,37 +158,38 @@ struct LandingPage: View {
                 }
             }
             
-            if(showAllSongs)
-            {
+            // Full-screen views
+            if showAllSongs {
                 Songs(topSongs: topSongs, showAllSongs: $showAllSongs)
-            }
-            else if(showAllAlbums)
-            {
+            } else if showAllAlbums {
                 Albums(topAlbums: topAlbums, showAllAlbums: $showAllAlbums)
-            }
-            else if (showAllArtists)
-            {
+            } else if showAllArtists {
                 Artists(topArtists: topArtists, showAllArtists: $showAllArtists)
-            }
-            else if (showAllPlaylists)
-            {
+            } else if showAllPlaylists {
                 Playlists(topPlaylists: topPlaylists, showAllPlaylists: $showAllPlaylists)
-            }
-            else if (showAllGenres)
-            {
+            } else if showAllGenres {
                 Genres(topGenres: topGenres, showAllGenres: $showAllGenres)
             }
         }
-        .padding()
         .onAppear {
             OnAppear()
         }
     }
-
+    
+    @ViewBuilder
+    private func sectionHeader(title: String, action: @escaping () -> Void) -> some View {
+        HStack {
+            Text(title)
+                .font(.title2)
+                .fontWeight(.bold)
+            Spacer()
+            Button("See All", action: action)
+                .foregroundColor(.blue)
+        }
+    }
+    
     func OnAppear() {
         isLoading = true
-        
-        // Check current authorization status
         let status = MPMediaLibrary.authorizationStatus()
         handleAuthorizationStatus(status)
     }
@@ -231,153 +197,135 @@ struct LandingPage: View {
     func handleAuthorizationStatus(_ status: MPMediaLibraryAuthorizationStatus) {
         switch status {
         case .authorized:
-            // User already authorized, proceed to get media
             isAuthorized = true
             if !loadCachedData() {
-                // If no valid cache exists, fetch fresh data
                 getMedia()
             }
         case .notDetermined:
-            // User has not yet decided, request authorization
             requestAuthorization()
         case .denied, .restricted:
-            // Access denied or restricted, handle accordingly
             isAuthorized = false
-            isLoading = false // Stop loading if access is denied
+            isLoading = false
         @unknown default:
             fatalError("Unknown authorization status")
         }
     }
     
     func requestAuthorization() {
-        // Request authorization asynchronously
         isLoading = true
         loadingMessage = "Requesting Access..."
-        
         MPMediaLibrary.requestAuthorization { status in
-            // Update UI on the main thread after the request is complete
             DispatchQueue.main.async {
                 handleAuthorizationStatus(status)
-                //isLoading = false // Stop loading once the authorization is finished
             }
         }
     }
-
+    
     func getMedia() {
-        // Reset loading flags and state
         isLoading = true
         isSongsLoading = true
         isAlbumsLoading = true
         isArtistsLoading = true
         isPlaylistsLoading = true
         isGenresLoading = true
-
+        
         func checkIfAllDone() {
             if !isSongsLoading && !isAlbumsLoading && !isArtistsLoading && !isPlaylistsLoading && !isGenresLoading {
                 isLoading = false
-                
-                self.cacheData()
+                cacheData()
             }
         }
-
+        
         DispatchQueue.global(qos: .userInitiated).async {
             let songsQuery = MPMediaQuery.songs()
             let albumsQuery = MPMediaQuery.albums()
             let artistsQuery = MPMediaQuery.artists()
             let playlistsQuery = MPMediaQuery.playlists()
             let genresQuery = MPMediaQuery.genres()
-
-            // Songs - Remove duplicates before processing
+            
             if let songs = songsQuery.items {
-                let uniqueSongs = self.getUniqueSongs(from: songs)
-                
+                let uniqueSongs = getUniqueSongs(from: songs)
                 let totalSecondsLocal = uniqueSongs.reduce(0) { $0 + ($1.playbackDuration * Double($1.playCount)) }
                 let h = Int(totalSecondsLocal / 3600)
-                let m = Int(Int(totalSecondsLocal) % 3600 / 60)
+                let m = (Int(totalSecondsLocal) % 3600) / 60
                 let s = Int(totalSecondsLocal) % 60
-
                 let sortedSongs = uniqueSongs.sorted { $0.playCount > $1.playCount }
-
                 DispatchQueue.main.async {
-                    self.totalSeconds = totalSecondsLocal
-                    self.hours = h
-                    self.minutes = m
-                    self.seconds = s
-                    self.topSongs = sortedSongs
-                    self.isSongsLoading = false
+                    totalSeconds = totalSecondsLocal
+                    hours = h
+                    minutes = m
+                    seconds = s
+                    topSongs = sortedSongs
+                    isSongsLoading = false
                     checkIfAllDone()
                 }
             } else {
                 DispatchQueue.main.async {
-                    self.isSongsLoading = false
+                    isSongsLoading = false
                     checkIfAllDone()
                 }
             }
-
-            // Albums - Use helper function for deduplication
+            
             if let albums = albumsQuery.collections {
                 let sortedAlbums = albums.sorted {
-                    self.getTotalPlayCount(from: $0) > self.getTotalPlayCount(from: $1)
+                    getTotalPlayCount(from: $0) > getTotalPlayCount(from: $1)
                 }
                 DispatchQueue.main.async {
-                    self.topAlbums = sortedAlbums
-                    self.isAlbumsLoading = false
+                    topAlbums = sortedAlbums
+                    isAlbumsLoading = false
                     checkIfAllDone()
                 }
             } else {
                 DispatchQueue.main.async {
-                    self.isAlbumsLoading = false
+                    isAlbumsLoading = false
                     checkIfAllDone()
                 }
             }
-
-            // Artists - Use helper function for deduplication
+            
             if let artists = artistsQuery.collections {
                 let sortedArtists = artists.sorted {
-                    self.getTotalPlayCount(from: $0) > self.getTotalPlayCount(from: $1)
+                    getTotalPlayCount(from: $0) > getTotalPlayCount(from: $1)
                 }
                 DispatchQueue.main.async {
-                    self.topArtists = sortedArtists
-                    self.isArtistsLoading = false
+                    topArtists = sortedArtists
+                    isArtistsLoading = false
                     checkIfAllDone()
                 }
             } else {
                 DispatchQueue.main.async {
-                    self.isArtistsLoading = false
+                    isArtistsLoading = false
                     checkIfAllDone()
                 }
             }
-
-            // Playlists - Use helper function for deduplication
+            
             if let playlists = playlistsQuery.collections as? [MPMediaPlaylist] {
                 let sortedPlaylists = playlists.sorted {
-                    self.getTotalPlayCount(from: $0) > self.getTotalPlayCount(from: $1)
+                    getTotalPlayCount(from: $0) > getTotalPlayCount(from: $1)
                 }
                 DispatchQueue.main.async {
-                    self.topPlaylists = sortedPlaylists
-                    self.isPlaylistsLoading = false
+                    topPlaylists = sortedPlaylists
+                    isPlaylistsLoading = false
                     checkIfAllDone()
                 }
             } else {
                 DispatchQueue.main.async {
-                    self.isPlaylistsLoading = false
+                    isPlaylistsLoading = false
                     checkIfAllDone()
                 }
             }
-
-            // Genres - Use helper function for deduplication
+            
             if let genres = genresQuery.collections {
                 let sortedGenres = genres.sorted {
-                    self.getTotalPlayCount(from: $0) > self.getTotalPlayCount(from: $1)
+                    getTotalPlayCount(from: $0) > getTotalPlayCount(from: $1)
                 }
                 DispatchQueue.main.async {
-                    self.topGenres = sortedGenres
-                    self.isGenresLoading = false
+                    topGenres = sortedGenres
+                    isGenresLoading = false
                     checkIfAllDone()
                 }
             } else {
                 DispatchQueue.main.async {
-                    self.isGenresLoading = false
+                    isGenresLoading = false
                     checkIfAllDone()
                 }
             }
@@ -385,42 +333,31 @@ struct LandingPage: View {
     }
     
     func loadCachedData() -> Bool {
-        guard let cache = MusicCacheManager.loadCache() else {
-            return false
-        }
-        
-        // Convert cached data back to media objects
+        guard let cache = MusicCacheManager.loadCache() else { return false }
         let convertedData = MusicCacheManager.convertCacheToMediaObjects(cache: cache)
-        
-        // Update UI on main thread
         DispatchQueue.main.async {
-            self.topSongs = convertedData.songs
-            self.topAlbums = convertedData.albums
-            self.topArtists = convertedData.artists
-            self.topPlaylists = convertedData.playlists
-            self.topGenres = convertedData.genres
-            self.totalSeconds = cache.totalSeconds
-            
+            topSongs = convertedData.songs
+            topAlbums = convertedData.albums
+            topArtists = convertedData.artists
+            topPlaylists = convertedData.playlists
+            topGenres = convertedData.genres
+            totalSeconds = cache.totalSeconds
             let h = Int(cache.totalSeconds / 3600)
-            let m = Int(Int(cache.totalSeconds) % 3600 / 60)
+            let m = (Int(cache.totalSeconds) % 3600) / 60
             let s = Int(cache.totalSeconds) % 60
-            
-            self.hours = h
-            self.minutes = m
-            self.seconds = s
-            
-            // Set loading states to false
-            self.isSongsLoading = false
-            self.isAlbumsLoading = false
-            self.isArtistsLoading = false
-            self.isPlaylistsLoading = false
-            self.isGenresLoading = false
-            self.isLoading = false
+            hours = h
+            minutes = m
+            seconds = s
+            isSongsLoading = false
+            isAlbumsLoading = false
+            isArtistsLoading = false
+            isPlaylistsLoading = false
+            isGenresLoading = false
+            isLoading = false
         }
-        
         return true
     }
-
+    
     func cacheData() {
         MusicCacheManager.saveCache(
             songs: topSongs,
@@ -430,11 +367,5 @@ struct LandingPage: View {
             genres: topGenres,
             totalSeconds: totalSeconds
         )
-    }
-}
-
-struct LandingPage_Previews: PreviewProvider {
-    static var previews: some View {
-        LandingPage()
     }
 }
