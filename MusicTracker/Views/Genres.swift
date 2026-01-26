@@ -9,46 +9,21 @@ import SwiftUI
 import MediaPlayer
 
 struct Genres: View {
-    @State var topGenres: [MPMediaItemCollection]
-    @Binding var showAllGenres: Bool
-    
-    @State var selectedGenre : MPMediaItemCollection = MPMediaItemCollection(items: [])
-    @State var showGenre : Bool = false
+    let topGenres: [MPMediaItemCollection]
     
     var body: some View {
-        ZStack{
-            VStack{
-                ZStack{
-                    Text("Genres")
+        List {
+            ForEach(Array(topGenres.enumerated()), id: \.offset) { index, genre in
+                NavigationLink(value: MusicRoute.genreDetail(genre)) {
                     HStack{
-                        Button("Back") {
-                            showAllGenres = false
-                        }
-                        Spacer()
+                        Text("\(index + 1)")
+                            .foregroundStyle(.secondary)
+                        GenreListItem(genre: genre)
                     }
                 }
-                List {
-                    ForEach(Array(topGenres.enumerated()), id: \.offset) { index, genre in
-                        Button(
-                            action: {
-                                selectedGenre = genre
-                                showGenre = true
-                            },
-                            label: {
-                                HStack{
-                                    Text("\(index + 1)")
-                                    GenreListItem(genre: genre)
-                                }
-                            }
-                        )
-                    }
-                }
-            }
-            if(showGenre)
-            {
-                Genre(Genre: selectedGenre, showGenre: $showGenre)
             }
         }
-        .background(Color(.systemBackground))
+        .navigationTitle("Genres")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

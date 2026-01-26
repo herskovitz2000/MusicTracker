@@ -9,47 +9,21 @@ import SwiftUI
 import MediaPlayer
 
 struct Artists: View {
-    @State var topArtists: [MPMediaItemCollection]
-    @Binding var showAllArtists: Bool
-    
-    @State var selectedArtist : MPMediaItemCollection = MPMediaItemCollection(items: [])
-    @State var showArtist : Bool = false
+    let topArtists: [MPMediaItemCollection]
     
     var body: some View {
-        ZStack
-        {
-            VStack{
-                ZStack{
-                    Text("Artists")
+        List {
+            ForEach(Array(topArtists.enumerated()), id: \.offset) { index, artist in
+                NavigationLink(value: MusicRoute.artistDetail(artist)) {
                     HStack{
-                        Button("Back") {
-                            showAllArtists = false
-                        }
-                        Spacer()
+                        Text("\(index + 1)")
+                            .foregroundStyle(.secondary)
+                        ArtistListItem(artist: artist)
                     }
                 }
-                List {
-                    ForEach(Array(topArtists.enumerated()), id: \.offset) { index, artist in
-                        Button(
-                            action: {
-                                selectedArtist = artist
-                                showArtist = true
-                            },
-                            label: {
-                                HStack{
-                                    Text("\(index + 1)")
-                                    ArtistListItem(artist: artist)
-                                }
-                            }
-                        )
-                    }
-                }
-            }
-            if(showArtist)
-            {
-                Artist(Artist: selectedArtist, showArtist: $showArtist)
             }
         }
-        .background(Color(.systemBackground))
+        .navigationTitle("Artists")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

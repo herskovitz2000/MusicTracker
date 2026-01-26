@@ -9,49 +9,21 @@ import SwiftUI
 import MediaPlayer
 
 struct Songs: View {
-    @State var topSongs: [MPMediaItem]
-    @Binding var showAllSongs: Bool
-    
-    @State var selectedSong : MPMediaItem = MPMediaItem()
-    @State var showSong = false
+    let topSongs: [MPMediaItem]
     
     var body: some View {
-        ZStack{
-            VStack(alignment: .leading) {
-                VStack{
-                    ZStack{
-                        Text("Songs")
-                        HStack{
-                            Button("Back") {
-                                showAllSongs = false
-                            }
-                            Spacer()
-                        }
-                    }
-                    List {
-                        ForEach(Array(topSongs.enumerated()), id: \.offset) { index, song in
-                            Button(
-                                action: {
-                                    selectedSong = song
-                                    showSong = true
-                                },
-                                label: {
-                                    HStack{
-                                        Text("\(index + 1)")
-                                        SongListItem(song: song)
-                                    }
-                                }
-                            )
-                        }
+        List {
+            ForEach(Array(topSongs.enumerated()), id: \.offset) { index, song in
+                NavigationLink(value: MusicRoute.songDetail(song)) {
+                    HStack{
+                        Text("\(index + 1)")
+                            .foregroundStyle(.secondary)
+                        SongListItem(song: song)
                     }
                 }
             }
-            if(showSong)
-            {
-                Song(Song: selectedSong, showSong: $showSong)
-            }
         }
-        .background(Color(.systemBackground))
-        //.ignoresSafeArea()
+        .navigationTitle("Songs")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
