@@ -114,17 +114,53 @@ struct LandingPage: View {
     var libraryContentView: some View {
         List {
             // Header
+            // Header
             Section {
-                VStack(spacing: 10) {
-                    Image(systemName: "music.note")
-                        .imageScale(.large)
-                        .foregroundColor(.accentColor)
-                    Text("Welcome To Music Tracker!")
-                        .font(.headline)
-                    Text("Total Time Listening to Music:")
-                    Text("\(hours) hours, \(minutes) minutes, \(seconds) seconds")
+                VStack(spacing: 24) {
+                    Image(systemName: "music.quarternote.3")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 80, height: 80)
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [.purple, .blue],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .shadow(color: .purple.opacity(0.3), radius: 10, x: 0, y: 5)
+                        .padding(.top, 10)
+                    
+                    VStack(spacing: 8) {
+                        Text("Welcome to")
+                            .font(.title2)
+                            .foregroundStyle(.secondary)
+                        Text("Music Tracker")
+                            .font(.largeTitle.weight(.black))
+                            .foregroundStyle(.primary)
+                    }
+                    .multilineTextAlignment(.center)
+                    
+                    VStack(spacing: 8) {
+                        Text("Total Time Listening")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundStyle(.secondary)
+                            .textCase(.uppercase)
+                        
+                        Text("\(hours)h \(minutes)m \(seconds)s")
+                            .font(.system(.title3, design: .rounded).monospacedDigit())
+                            .fontWeight(.bold)
+                            .foregroundStyle(.primary)
+                    }
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 20)
+                    .background(Color.secondary.opacity(0.1))
+                    .cornerRadius(12)
                 }
                 .frame(maxWidth: .infinity)
+                .padding(.vertical, 20)
+                .listRowBackground(Color.clear)
             }
             
             // Top Songs
@@ -250,7 +286,11 @@ struct LandingPage: View {
     }
     
     func OnAppear() {
-        isLoading = true
+        // Prevent re-fetching if already loading or if we already have data
+        guard !isLoading else { return }
+        
+        // If we already have content, don't re-run authorization check/fetch
+        if !isLibraryEmpty { return }
 
         let status = MPMediaLibrary.authorizationStatus()
         handleAuthorizationStatus(status)
@@ -260,8 +300,14 @@ struct LandingPage: View {
         switch status {
         case .authorized:
             isAuthorized = true
-            if !loadCachedData() {
-                getMedia()
+            Task {
+                // Only try to load cache if we don't have data
+                if isLibraryEmpty {
+                    let loaded = await loadCachedData()
+                    if !loaded {
+                        getMedia()
+                    }
+                }
             }
         case .notDetermined:
             requestAuthorization()
@@ -284,6 +330,9 @@ struct LandingPage: View {
     }
     
     func getMedia() {
+        // Double check strict guard
+        guard !isLoading else { return }
+        
         isLoading = true
         isSongsLoading = true
         isAlbumsLoading = true
@@ -394,10 +443,16 @@ struct LandingPage: View {
         }
     }
     
-    func loadCachedData() -> Bool {
-        guard let cache = MusicCacheManager.loadCache() else { return false }
-        let convertedData = MusicCacheManager.convertCacheToMediaObjects(cache: cache)
-        DispatchQueue.main.async {
+    func loadCachedData() async -> Bool {
+        guard let cache = await MusicCacheManager.loadCache() else { return false }
+        
+        // Process data in background
+        let convertedData = await Task.detached(priority: .userInitiated) {
+            return MusicCacheManager.convertCacheToMediaObjects(cache: cache)
+        }.value
+        
+        // Update UI on MainActor
+        await MainActor.run {
             topSongs = convertedData.songs
             topAlbums = convertedData.albums
             topArtists = convertedData.artists
@@ -421,14 +476,41 @@ struct LandingPage: View {
     }
     
     func cacheData() {
-        MusicCacheManager.saveCache(
-            songs: topSongs,
-            albums: topAlbums,
-            artists: topArtists,
-            playlists: topPlaylists,
-            genres: topGenres,
-            totalSeconds: totalSeconds
-        )
+        Task { @MainActor in
+            // Build cache in batches to avoid freezing UI
+            let songs = await batchMap(topSongs) { CachedSong(from: $0) }
+            let albums = await batchMap(topAlbums) { CachedAlbum(from: $0) }
+            let artists = await batchMap(topArtists) { CachedArtist(from: $0) }
+            let playlists = await batchMap(topPlaylists) { CachedPlaylist(from: $0) }
+            let genres = await batchMap(topGenres) { CachedGenre(from: $0) }
+            
+            let cache = MusicCache(
+                cachedSongs: songs,
+                cachedAlbums: albums,
+                cachedArtists: artists,
+                cachedPlaylists: playlists,
+                cachedGenres: genres,
+                totalSeconds: totalSeconds
+            )
+            
+            await MusicCacheManager.saveCache(cache: cache)
+        }
+    }
+    
+    // Helper to map large arrays in chunks, yielding to main runloop
+    private func batchMap<T, U>(_ items: [T], transform: (T) -> U) async -> [U] {
+        var results: [U] = []
+        results.reserveCapacity(items.count)
+        
+        let batchSize = 30 // Smaller batch size prevents frames from dropping
+        for chunk in items.chunked(into: batchSize) {
+            for item in chunk {
+                results.append(transform(item))
+            }
+            // Explicit sleep guarantees the runloop gets a turn to render
+            try? await Task.sleep(nanoseconds: 2_000_000) // 2ms 
+        }
+        return results
     }
 
 }
@@ -444,4 +526,12 @@ enum MusicRoute: Hashable {
     case artistDetail(MPMediaItemCollection)
     case playlistDetail(MPMediaPlaylist)
     case genreDetail(MPMediaItemCollection)
+}
+
+extension Array {
+    func chunked(into size: Int) -> [[Element]] {
+        return stride(from: 0, to: count, by: size).map {
+            Array(self[$0 ..< Swift.min($0 + size, count)])
+        }
+    }
 }

@@ -12,45 +12,44 @@ class MusicCacheManager {
         return documentsPath.appendingPathComponent(cacheFileName)
     }
     
-    // MARK: - Save Cache
-    static func saveCache(songs: [MPMediaItem], albums: [MPMediaItemCollection],
-                         artists: [MPMediaItemCollection], playlists: [MPMediaPlaylist],
-                         genres: [MPMediaItemCollection], totalSeconds: TimeInterval) {
-        let cache = MusicCache(songs: songs, albums: albums, artists: artists,
-                              playlists: playlists, genres: genres, totalSeconds: totalSeconds)
+    static func saveCache(cache: MusicCache) async {
         
-        do {
-            let data = try JSONEncoder().encode(cache)
-            try data.write(to: cacheURL)
-            print("Cache saved successfully")
-        } catch {
-            print("Failed to save cache: \(error)")
-        }
+        await Task.detached(priority: .background) {
+            do {
+                let data = try JSONEncoder().encode(cache)
+                try data.write(to: cacheURL)
+                print("Cache saved successfully")
+            } catch {
+                print("Failed to save cache: \(error)")
+            }
+        }.value
     }
     
     // MARK: - Load Cache
-    static func loadCache() -> MusicCache? {
-        guard FileManager.default.fileExists(atPath: cacheURL.path) else {
-            print("Cache file does not exist")
-            return nil
-        }
-        
-        do {
-            let data = try Data(contentsOf: cacheURL)
-            let cache = try JSONDecoder().decode(MusicCache.self, from: data)
-            
-            // Check if cache is still valid (within maxCacheAge)
-            if Date().timeIntervalSince(cache.cacheDate) > maxCacheAge {
-                print("Cache is too old, will refresh")
+    static func loadCache() async -> MusicCache? {
+        await Task.detached(priority: .userInitiated) {
+            guard FileManager.default.fileExists(atPath: cacheURL.path) else {
+                print("Cache file does not exist")
                 return nil
             }
             
-            print("Cache loaded successfully")
-            return cache
-        } catch {
-            print("Failed to load cache: \(error)")
-            return nil
-        }
+            do {
+                let data = try Data(contentsOf: cacheURL)
+                let cache = try JSONDecoder().decode(MusicCache.self, from: data)
+                
+                // Check if cache is still valid (within maxCacheAge)
+                if Date().timeIntervalSince(cache.cacheDate) > maxCacheAge {
+                    print("Cache is too old, will refresh")
+                    return nil
+                }
+                
+                print("Cache loaded successfully")
+                return cache
+            } catch {
+                print("Failed to load cache: \(error)")
+                return nil
+            }
+        }.value
     }
     
     // MARK: - Clear Cache

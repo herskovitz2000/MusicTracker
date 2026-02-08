@@ -136,6 +136,18 @@ struct MusicCache: Codable {
         self.totalSeconds = totalSeconds
         self.cacheDate = Date()
     }
+    
+    // Memberwise init for batched creation
+    init(cachedSongs: [CachedSong], cachedAlbums: [CachedAlbum], cachedArtists: [CachedArtist],
+         cachedPlaylists: [CachedPlaylist], cachedGenres: [CachedGenre], totalSeconds: TimeInterval) {
+        self.songs = cachedSongs
+        self.albums = cachedAlbums
+        self.artists = cachedArtists
+        self.playlists = cachedPlaylists
+        self.genres = cachedGenres
+        self.totalSeconds = totalSeconds
+        self.cacheDate = Date()
+    }
 }
 
 // MARK: - Equatable Conformance
