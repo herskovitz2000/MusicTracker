@@ -305,6 +305,7 @@ struct LandingPage: View {
                 if isLibraryEmpty {
                     let loaded = await loadCachedData()
                     if !loaded {
+                        isLoading = false
                         getMedia()
                     }
                 }
@@ -334,6 +335,7 @@ struct LandingPage: View {
         guard !isLoading else { return }
         
         isLoading = true
+        loadingMessage = "Loading Library..."
         isSongsLoading = true
         isAlbumsLoading = true
         isArtistsLoading = true
@@ -348,12 +350,10 @@ struct LandingPage: View {
         }
         
         DispatchQueue.global(qos: .userInitiated).async {
-            let songsQuery = MPMediaQuery.songs()
-            let albumsQuery = MPMediaQuery.albums()
-            let artistsQuery = MPMediaQuery.artists()
-            let playlistsQuery = MPMediaQuery.playlists()
-            let genresQuery = MPMediaQuery.genres()
+            let startTime = Date()
             
+            let songsStart = Date()
+            let songsQuery = MPMediaQuery.songs()
             if let songs = songsQuery.items {
                 let uniqueSongs = getUniqueSongs(from: songs)
                 let totalSecondsLocal = uniqueSongs.reduce(0) { $0 + ($1.playbackDuration * Double($1.playCount)) }
@@ -361,6 +361,7 @@ struct LandingPage: View {
                 let m = (Int(totalSecondsLocal) % 3600) / 60
                 let s = Int(totalSecondsLocal) % 60
                 let sortedSongs = uniqueSongs.sorted { $0.playCount > $1.playCount }
+                print("Main: Loaded \(sortedSongs.count) Songs in \(Date().timeIntervalSince(songsStart))s")
                 DispatchQueue.main.async {
                     totalSeconds = totalSecondsLocal
                     hours = h
@@ -377,10 +378,13 @@ struct LandingPage: View {
                 }
             }
             
+            let albumsStart = Date()
+            let albumsQuery = MPMediaQuery.albums()
             if let albums = albumsQuery.collections {
                 let sortedAlbums = albums.sorted {
                     getTotalPlayCount(from: $0) > getTotalPlayCount(from: $1)
                 }
+                print("Main: Loaded \(sortedAlbums.count) Albums in \(Date().timeIntervalSince(albumsStart))s")
                 DispatchQueue.main.async {
                     topAlbums = sortedAlbums
                     isAlbumsLoading = false
@@ -393,10 +397,13 @@ struct LandingPage: View {
                 }
             }
             
+            let artistsStart = Date()
+            let artistsQuery = MPMediaQuery.artists()
             if let artists = artistsQuery.collections {
                 let sortedArtists = artists.sorted {
                     getTotalPlayCount(from: $0) > getTotalPlayCount(from: $1)
                 }
+                print("Main: Loaded \(sortedArtists.count) Artists in \(Date().timeIntervalSince(artistsStart))s")
                 DispatchQueue.main.async {
                     topArtists = sortedArtists
                     isArtistsLoading = false
@@ -409,10 +416,13 @@ struct LandingPage: View {
                 }
             }
             
+            let playlistsStart = Date()
+            let playlistsQuery = MPMediaQuery.playlists()
             if let playlists = playlistsQuery.collections as? [MPMediaPlaylist] {
                 let sortedPlaylists = playlists.sorted {
                     getTotalPlayCount(from: $0) > getTotalPlayCount(from: $1)
                 }
+                print("Main: Loaded \(sortedPlaylists.count) Playlists in \(Date().timeIntervalSince(playlistsStart))s")
                 DispatchQueue.main.async {
                     topPlaylists = sortedPlaylists
                     isPlaylistsLoading = false
@@ -425,10 +435,13 @@ struct LandingPage: View {
                 }
             }
             
+            let genresStart = Date()
+            let genresQuery = MPMediaQuery.genres()
             if let genres = genresQuery.collections {
                 let sortedGenres = genres.sorted {
                     getTotalPlayCount(from: $0) > getTotalPlayCount(from: $1)
                 }
+                print("Main: Loaded \(sortedGenres.count) Genres in \(Date().timeIntervalSince(genresStart))s")
                 DispatchQueue.main.async {
                     topGenres = sortedGenres
                     isGenresLoading = false
@@ -440,16 +453,21 @@ struct LandingPage: View {
                     checkIfAllDone()
                 }
             }
+            print("Main: Total Fetched Time: \(Date().timeIntervalSince(startTime))s")
         }
     }
     
     func loadCachedData() async -> Bool {
+        let loadStart = Date()
         guard let cache = await MusicCacheManager.loadCache() else { return false }
+        print("Main: Loaded Cache File in \(Date().timeIntervalSince(loadStart))s")
         
         // Process data in background
+        let convertStart = Date()
         let convertedData = await Task.detached(priority: .userInitiated) {
             return MusicCacheManager.convertCacheToMediaObjects(cache: cache)
         }.value
+        print("Main: Converted Cache to Objects in \(Date().timeIntervalSince(convertStart))s")
         
         // Update UI on MainActor
         await MainActor.run {
